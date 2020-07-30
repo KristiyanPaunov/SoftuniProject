@@ -1,0 +1,21 @@
+<th:block xmlns:th = "http://www.thymeleaf.org">
+    <nav class="nav nav-pills flex-column flex-sm-row">
+
+
+        <th:block th:if="${session.isEmpty()}">
+            <a class="flex-sm-fill text-sm-center nav-link active" href="/login">Login</a>
+            <a class="flex-sm-fill text-sm-center nav-link" href="/register">Register</a>
+        </th:block>
+
+        <th:block th:unless="${session.isEmpty()}">
+            <a class="flex-sm-fill text-sm-center nav-link" href="">Cart</a>
+            <a class="flex-sm-fill text-sm-center nav-link disabled" href="/logout">Logout</a>
+        </th:block>
+
+<!--        <a class="flex-sm-fill text-sm-center nav-link active" href="/login">Login</a>-->
+<!--        <a class="flex-sm-fill text-sm-center nav-link" href="/register">Register</a>-->
+<!--        <a class="flex-sm-fill text-sm-center nav-link" href="#">Link</a>-->
+<!--        <a class="flex-sm-fill text-sm-center nav-link disabled" href="#">Logout</a>-->
+    </nav>
+</th:block>
+

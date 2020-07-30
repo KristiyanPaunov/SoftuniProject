@@ -2,6 +2,9 @@ package com.example.website.model.entity;
 
 
 import javax.persistence.*;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -13,7 +16,13 @@ public class User {
     private String username;
     private String password;
     private String email;
-    private Role role;
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "users_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<Role> roles = new HashSet<>();
     @OneToOne
     private Cart cart;
 
@@ -51,13 +60,12 @@ public class User {
         this.email = email;
     }
 
-    @Enumerated(EnumType.STRING)
-    public Role getRole() {
-        return role;
+    public Collection<Role> getRoles() {
+        return roles;
     }
 
-    public void setRole(Role role) {
-        this.role = role;
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 
     public Cart getCart() {

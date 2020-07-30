@@ -1,28 +1,23 @@
-package com.example.website.model.entity;
+package com.example.website.model.view;
 
-import javax.persistence.*;
 import java.math.BigDecimal;
 
-@Entity
-@Table(name = "products")
-public class Product {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+public class ProductViewModel {
+    private String id;
     private String name;
     private String gender;
     private String description;
     private BigDecimal price;
-    private boolean isDeleted;
-    @ManyToOne
-    private Category category;
+    private String imageUrl;
 
-    public Long getId() {
+    public ProductViewModel() {
+    }
+
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -58,19 +53,11 @@ public class Product {
         this.price = price;
     }
 
-    public Category getCategory() {
-        return category;
+    public String getImageUrl() {
+        return imageUrl;
     }
 
-    public void setCategory(Category category) {
-        this.category = category;
-    }
-
-    public boolean isDeleted() {
-        return isDeleted;
-    }
-
-    public void setDeleted(boolean deleted) {
-        isDeleted = deleted;
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

@@ -1,5 +1,6 @@
 package com.example.website.web;
 
+import com.example.website.model.binding.UserLoginBindingModel;
 import com.example.website.model.binding.UserRegisterBindingModel;
 import com.example.website.model.service.UserServiceModel;
 import com.example.website.service.UserService;
@@ -8,55 +9,110 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.annotation.security.RolesAllowed;
+import javax.servlet.http.HttpSession;
+import javax.validation.Valid;
 
-@RestController
+
+@Controller
 public class UsersController {
 
     @Autowired
-    private  UserService userService;
+    private UserService userService;
     @Autowired
-    private  ModelMapper modelMapper;
+    private ModelMapper modelMapper;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
 
-    @PostMapping("/register")
-    public ResponseEntity register(@RequestBody UserRegisterBindingModel userRegisterBindingModel){
+    @GetMapping("/login")
+    public String login(Model model) {
+        if (!model.containsAttribute("userLoginBindingModel")) {
+            model.addAttribute("userLoginBindingModel", new UserLoginBindingModel());
+        }
+        return "login";
+    }
 
-        if (userRegisterBindingModel.getRole() != null){
-            return new ResponseEntity<>("Cannot set role!" , HttpStatus.FORBIDDEN);
+
+    @PostMapping("/login")
+    public String loginUser(@Valid @ModelAttribute("userLoginBindingModel")
+                                    UserLoginBindingModel userLoginBindingModel,
+                            BindingResult bindingResult,
+                            RedirectAttributes redirectAttributes,
+                            HttpSession httpSession) {
+
+//        if (bindingResult.hasErrors()) {
+//            redirectAttributes.addFlashAttribute("userLoginBindingModel", userLoginBindingModel);
+//            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.userLoginBindingModel", bindingResult);
+//            return "redirect:login";
+//        }
+
+        UserServiceModel user = this.userService.findByUsername(userLoginBindingModel.getUsername());
+
+        if (user == null || !passwordEncoder.matches(userLoginBindingModel.getPassword(), user.getPassword())) {
+            redirectAttributes.addFlashAttribute("userLoginBindingModel", userLoginBindingModel);
+            redirectAttributes.addFlashAttribute("notFound", true);
+            return "redirect:login";
         }
 
-        userService.register(this.modelMapper
-                .map(userRegisterBindingModel, UserServiceModel.class));
+        httpSession.setAttribute("user", user);
 
-        return new ResponseEntity<>(userRegisterBindingModel, HttpStatus.OK);
+        return "redirect:viewProducts";
+
+    }
+
+    @GetMapping("/register")
+    public String register(Model model) {
+        if (!model.containsAttribute("userRegisterBindingModel")) {
+            model.addAttribute("userRegisterBindingModel", new UserRegisterBindingModel());
+        }
+        return "register";
+
+    }
+
+    @PostMapping("/register")
+    public String register(@Valid @ModelAttribute("userRegisterBindingModel")
+                                   UserRegisterBindingModel userRegisterBindingModel,
+                           BindingResult bindingResult, RedirectAttributes redirectAttributes) {
+
+        if (bindingResult.hasErrors() || !userRegisterBindingModel.getPassword().equals(userRegisterBindingModel.getConfirmPassword())) {
+
+            redirectAttributes.addFlashAttribute("userRegisterBindingModel", userRegisterBindingModel);
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.userRegisterBindingModel", bindingResult);
+
+            return "redirect:register";
+        }
+
+        this.userService.userRegister(this.modelMapper.map(userRegisterBindingModel, UserServiceModel.class));
+        return "redirect:login";
 
     }
 
     @PostMapping("/adminRegister")
-//    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity adminRegister(@RequestBody UserRegisterBindingModel userRegisterBindingModel){
+    public ResponseEntity adminRegister(@RequestBody UserRegisterBindingModel userRegisterBindingModel) {
 
-        if (userRegisterBindingModel.getRole() != null){
-            return new ResponseEntity<>("Cannot set role!" , HttpStatus.FORBIDDEN);
+        if (userRegisterBindingModel.getRole() != null) {
+            return new ResponseEntity<>("Cannot set role!", HttpStatus.FORBIDDEN);
         }
 
 
-        this.userService.register(this.modelMapper.map(userRegisterBindingModel, UserServiceModel.class));
+        this.userService.adminRegister(this.modelMapper.map(userRegisterBindingModel, UserServiceModel.class));
 
 
         return new ResponseEntity<>(userRegisterBindingModel, HttpStatus.CREATED);
 
     }
 
-    @GetMapping("/view")
-    public ResponseEntity viewUsers(){
-        return new ResponseEntity<>("Kris",HttpStatus.OK);
+    @GetMapping("/logout")
+    public String logout(HttpSession httpSession) {
+        httpSession.invalidate();
+        return "redirect:index";
     }
-
-
-
 
 }
