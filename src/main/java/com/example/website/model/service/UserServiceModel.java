@@ -9,7 +9,7 @@ public class UserServiceModel extends BaseServiceModel{
     private String username;
     private String password;
     private String email;
-    private Role role;
+    private Role roles;
     private CartServiceModel cart;
 
     public UserServiceModel() {
@@ -40,11 +40,11 @@ public class UserServiceModel extends BaseServiceModel{
     }
 
     public Role getRole() {
-        return role;
+        return roles;
     }
 
     public void setRole(Role role) {
-        this.role = role;
+        this.roles = role;
     }
 
     public CartServiceModel getCart() {

@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -117,6 +118,33 @@ public class CartServiceImpl implements CartService {
         }
 
         return total;
+
+    }
+
+    @Override
+    public CartServiceModel getAllProducts(Long cartId) {
+
+        Cart cart = cartRepository.findById(cartId).get();
+
+        CartServiceModel cartServiceModel = new CartServiceModel();
+        cartServiceModel.setId(cart.getId());
+
+        List<ProductServiceModel> productList = new ArrayList<>();
+
+        for (Product product:cart.getProducts()) {
+            ProductServiceModel productServiceModel = new ProductServiceModel();
+            productServiceModel.setId(product.getId());
+            productServiceModel.setDescription(product.getDescription());
+            productServiceModel.setName(product.getName());
+            productServiceModel.setPrice(product.getPrice());
+            productServiceModel.setGender(product.getGender());
+
+            productList.add(productServiceModel);
+        }
+
+        cartServiceModel.setProductServiceModels(productList);
+
+        return cartServiceModel;
 
     }
 

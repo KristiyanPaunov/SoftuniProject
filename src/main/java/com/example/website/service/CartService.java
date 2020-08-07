@@ -13,5 +13,7 @@ public interface CartService {
 
     BigDecimal removeAllProductsFromCartAndReturnSum(Long id);
 
+    CartServiceModel getAllProducts(Long cartId);
+
 
 }

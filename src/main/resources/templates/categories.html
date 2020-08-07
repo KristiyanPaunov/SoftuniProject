@@ -1,10 +1,39 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <th:block th:include="~{/fragments/head}"></th:block>
 </head>
 <body>
+<header>
+    <nav class="navbar bg-dark navbar-expand-lg navbar-background bg-dark ">
+        <th:block th:include="~{/fragments/nav}"></th:block>
+    </nav>
+</header>
+<main>
 
+    <h1 class="text-center mt-2"><span class="badge badge-pill badge-dark">Categories</span></h1>
+
+    <hr class="hr-3"/>
+    <div class="container-fluid">
+        <ul class="offers row mx-auto d-flex flex-row justify-content-center">
+            <li th:each="category : ${categories}" th:object="${category}" th:text="*{getName()}">
+<!--                <form action="#" th:action="@{'/deleteCategory/{id}'(id=${category.getId()})}" th:method="GET">-->
+<!--                    <span class="close" ></span>-->
+                    <button type="submit">DELETE</button>
+<!--                </form>-->
+
+            </li>
+        </ul>
+        <a href="/addCategory"><button>Add Category</button></a>
+
+    </div>
+
+
+</main>
+<footer class="footer bg-dark  py-2">
+    <th:block th:include="~{/fragments/footer}"></th:block>
+</footer>
 </body>
 </html>
+
+

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <th:block th:include="~{/fragments/head}"></th:block>
+</head>
+<body>
+<header>
+    <nav class="navbar bg-dark navbar-expand-lg navbar-background bg-dark ">
+        <th:block th:include="~{/fragments/nav}"></th:block>
+    </nav>
+</header>
+<main>
+    <h1 class="text-center mt-2"><span class="badge badge-pill badge-dark">Add Category</span></h1>
+    <hr class="hr-3"/>
+    <form class="mx-auto w-25 bg-dark bg-gray p-3 rounded" th:object="${categoryAddBindingModel}" th:action="@{/addCategory}" method="POST">
+
+        <div class="form-group">
+            <div class="label-holder text-white d-flex justify-content-center">
+                <label class="h3 mb-2">Name</label>
+            </div>
+            <input th:field="*{name}" th:errorclass="bg-danger" type="text" class="form-control"  name="name"/>
+        </div>
+
+        <div class="button-holder d-flex justify-content-center">
+            <button type="submit" class="btn btn-secondary text-white mb-3" value="Add">Add</button>
+        </div>
+
+    </form>
+</main>
+<footer class="footer bg-dark  py-2">
+    <th:block th:include="~{/fragments/footer}"></th:block>
+</footer>
+</body>
+</html>
+
+

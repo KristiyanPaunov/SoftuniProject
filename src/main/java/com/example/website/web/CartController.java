@@ -13,16 +13,19 @@ import com.example.website.model.service.UserServiceModel;
 import com.example.website.service.CartService;
 import com.example.website.service.CategoryService;
 import com.example.website.service.ProductService;
+import jdk.swing.interop.SwingInterOpUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
+import java.util.List;
 
 @Controller
 public class CartController {
@@ -36,10 +39,22 @@ public class CartController {
 
 
     @GetMapping("/cart")
-    public String returnCart() {
+    public ModelAndView returnCart(ModelAndView model, HttpSession httpSession) {
+//        if (!model.containsAttribute("cartAddBindingModel")) {
+//            model.addAttribute("cartAddBindingModel", new CartAddBindingModel());
+//        }
+
+        UserServiceModel userServiceModel = (UserServiceModel) httpSession.getAttribute("user");
+
+        Long userId = userServiceModel.getId();
+
+        model.addObject("cartModel", cartService.getAllProducts(userServiceModel.getCart().getId()));
+        model.setViewName("cart");
+
+        System.out.println();
 
 
-        return "cart";
+        return model;
     }
 
     @PostMapping("/addProductToCart/{id}")
@@ -61,8 +76,7 @@ public class CartController {
 
 
     @GetMapping("/removeProductFromCart/{id}")
-    public @ResponseBody
-    ResponseEntity removeProductFromCart(@PathVariable("id") Long id, HttpSession httpSession) {
+    public String removeProductFromCart(@PathVariable("id") Long id, HttpSession httpSession) {
 
         //works with hardcoded cart id
 
@@ -70,31 +84,32 @@ public class CartController {
 
         cartService.removeProductFromCart(id, userServiceModel.getId());
 
-        return new ResponseEntity<>("DELETE Response for cart", HttpStatus.OK);
+
+        System.out.println();
+
+        return "redirect:/cart";
 
     }
 
     @GetMapping("/removeAllProductsFromCart")
-    public @ResponseBody
-    ResponseEntity removeAllProductsFromCart(HttpSession httpSession) {
+    public String removeAllProductsFromCart(HttpSession httpSession) {
 
         UserServiceModel userServiceModel = (UserServiceModel) httpSession.getAttribute("user");
 
         cartService.removeAllProductsFromCart(userServiceModel.getId());
 
-        return new ResponseEntity<>("DELETE Response for cart", HttpStatus.OK);
+        return "redirect:/cart";
 
     }
 
     @GetMapping("/removeAllProductsFromCartAndReturnPrice")
-    public @ResponseBody
-    ResponseEntity removeAllProductsFromCartAndReturnPrice(HttpSession httpSession) {
+    public String removeAllProductsFromCartAndReturnPrice(HttpSession httpSession) {
 
         UserServiceModel userServiceModel = (UserServiceModel) httpSession.getAttribute("user");
 
         BigDecimal sum = cartService.removeAllProductsFromCartAndReturnSum(userServiceModel.getId());
 
-        return new ResponseEntity<>(sum, HttpStatus.OK);
+        return "redirect:/cart";
 
     }
 

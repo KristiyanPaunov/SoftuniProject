@@ -5,6 +5,7 @@ import com.example.website.model.entity.Product;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.DecimalMin;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 public class ProductAddBindingModel {
@@ -19,6 +20,7 @@ public class ProductAddBindingModel {
     }
 
     @Length(min = 2,message = "Product name length must be more than two characters")
+    @NotNull
     public String getName() {
         return name;
     }
@@ -27,6 +29,7 @@ public class ProductAddBindingModel {
         this.name = name;
     }
     @Length(min = 4,message = "Enter valid gender")
+    @NotNull
     public String getGender() {
         return gender;
     }
@@ -35,6 +38,7 @@ public class ProductAddBindingModel {
         this.gender = gender;
     }
     @Length(min = 3,message = "Description length must be more than three characters")
+    @NotNull
     public String getDescription() {
         return description;
     }
@@ -44,6 +48,7 @@ public class ProductAddBindingModel {
     }
 
     @DecimalMin(value = "0",message = "Enter valid price")
+    @NotNull
     public BigDecimal getPrice() {
         return price;
     }

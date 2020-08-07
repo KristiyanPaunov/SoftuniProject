@@ -64,11 +64,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserServiceModel findByUsername(String username) {
 
+        User user = userRepository.findByUsername(username).get();
+        Role role = user.getRoles().iterator().next();
+        UserServiceModel userServiceModel = modelMapper.map(user,UserServiceModel.class);
+        userServiceModel.setRole(role);
 
-        return this.userRepository
-                .findByUsername(username)
-                .map(user -> this.modelMapper.map(user, UserServiceModel.class))
-                .orElse(null);
+        return userServiceModel;
     }
 
 
