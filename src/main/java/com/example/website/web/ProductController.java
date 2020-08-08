@@ -46,7 +46,7 @@ public class ProductController {
 
         List<CategoryServiceModel> categoryServiceModels = this.categoryService.findAllCategories();
         System.out.println("CATEGORIES: " + categoryServiceModels.size());
-        model.addAttribute("categoryServiceModels",categoryServiceModels);
+        model.addAttribute("categoryServiceModels", categoryServiceModels);
 
         return "add-product";
 
@@ -58,9 +58,9 @@ public class ProductController {
                              BindingResult bindingResult, RedirectAttributes redirectAttributes) throws WrongCategoryException {
 
 
-        if (bindingResult.hasErrors()){
-            redirectAttributes.addFlashAttribute("productAddBindingModel",productAddBindingModel);
-            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.productAddBindingModel",bindingResult);
+        if (bindingResult.hasErrors()) {
+            redirectAttributes.addFlashAttribute("productAddBindingModel", productAddBindingModel);
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.productAddBindingModel", bindingResult);
 
             return "redirect:addProduct";
         }
@@ -75,32 +75,30 @@ public class ProductController {
     }
 
     @GetMapping("/deleteProduct/{id}")
-    public @ResponseBody
-    ResponseEntity<String> deleteProduct(@PathVariable("id") Long id) {
+    public String deleteProduct(@PathVariable("id") Long id) {
         this.productService.delete(id);
 
-        return new ResponseEntity<>(this.productRepository.findById(id).toString(), HttpStatus.OK);
+        return "redirect:/viewProducts";
     }
 
     @GetMapping("/details/{id}")
-    public ModelAndView details(@PathVariable("id")Long id, ModelAndView modelAndView){
+    public ModelAndView details(@PathVariable("id") Long id, ModelAndView modelAndView) {
 
-        modelAndView.addObject("product",this.productService.findById(id));
+        modelAndView.addObject("product", this.productService.findById(id));
         modelAndView.setViewName("details-product");
-        return  modelAndView;
+        return modelAndView;
     }
 
 
     @GetMapping("/viewProducts")
-    public ModelAndView viewProducts(ModelAndView modelAndView, HttpSession httpSession) {
+    public ModelAndView viewProducts(ModelAndView modelAndView) {
 
         List<ProductServiceModel> productServiceModels = this.productService.findAllItems();
-        modelAndView.addObject("products",productServiceModels);
+        modelAndView.addObject("products", productServiceModels);
         modelAndView.setViewName("products-view");
 
 
         return modelAndView;
-
 
 
     }

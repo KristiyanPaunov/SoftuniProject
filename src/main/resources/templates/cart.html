@@ -35,13 +35,17 @@
         </div>
     </div>
 
-    <a th:href="@{/removeAllProductsFromCart}" class="btn btn-danger" >Buy All</a>
+    <div id="buybutoondiv">
+        <a th:href="@{/removeAllProductsFromCart}" class="btn btn-danger" >Buy All</a>
+    </div>
+
+    <footer class="footer bg-dark  py-2">
+        <th:block th:include="~{/fragments/footer}"></th:block>
+    </footer>
 
 
 </main>
-<footer class="footer bg-dark  py-2">
-    <th:block th:include="~{/fragments/footer}"></th:block>
-</footer>
+
 </body>
 </html>
 

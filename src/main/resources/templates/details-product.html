@@ -11,24 +11,26 @@
 </header>
 <main>
 
-    <div class="alert alert-success" role="alert">
-        This is a success alert—check it out!
-    </div>
-
-
     <h1 class="text-center mt-2"><span class="badge badge-pill badge-dark">Details</span></h1>
     <hr class="my-3"/>
     <div class="container-fluid bg-dark w-25 m-auto ">
         <div class="row justify-content-center ">
             <div th:object="${product}" class="card" style="width: 18rem;">
-<!--                <img class="card-img-top" th:src="*{imageUrl}" alt="Card image cap">-->
+
                 <div class="card-body bg-gray align-content-center text-center">
                     <h6 th:text="*{name}">Item name</h6>
                     <p class="card-text" th:text="*{description}">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eligendi enim, excepturi ha </p>
                     <h6 th:text="*{price}">Price</h6>
+
                     <form th:action="@{/addProductToCart/{id}(id = ${product.getId()})}" method="POST" >
                         <button type="submit" name="submit" value="value" class="link-button">Add to cart</button>
                     </form>
+
+                    <th:block th:if="${session.role == 'ROLE_ADMIN'}">
+                        <form th:action="@{/deleteProduct/{id}(id = ${product.getId()})}" method="GET" >
+                            <button type="submit" name="submit" value="value" class="link-button">Delete product</button>
+                        </form>
+                    </th:block>
 
                 </div>
             </div>

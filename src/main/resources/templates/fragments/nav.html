@@ -1,61 +1,23 @@
-<th:block xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.w3.org/1999/xhtml">
-    <html xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-    <nav class="nav nav-pills flex-column flex-sm-row">
+<nav class="nav nav-pills flex-column flex-sm-row">
+    <th:block th:if="${session.isEmpty()}">
+        <a class="flex-sm-fill text-sm-center nav-link active" href="/login">Login</a>
+        <a class="flex-sm-fill text-sm-center nav-link" href="/register">Register</a>
+    </th:block>
 
-
-        <th:block th:if="${session.isEmpty()}">
-            <a class="flex-sm-fill text-sm-center nav-link active" href="/login">Login</a>
-            <a class="flex-sm-fill text-sm-center nav-link" href="/register">Register</a>
+    <th:block th:unless="${session.isEmpty()}">
+        <th:block th:if="${session.role == 'ROLE_ADMIN'}">
+            <a class="flex-sm-fill text-sm-center nav-link" href="/cart">Cart</a>
+            <a class="flex-sm-fill text-sm-center nav-link" href="/viewProducts">Products</a>
+            <a class="flex-sm-fill text-sm-center nav-link" href="/viewCategories">Categories</a>
+            <a class="flex-sm-fill text-sm-center nav-link" href="/adminRegister">Admin Register</a>
+            <a class="flex-sm-fill text-sm-center nav-link disabled" href="/logout">Logout</a>
         </th:block>
 
-        <th:block th:unless="${session.isEmpty()}">
-
-<!--                                    <th:block th:if="${}">-->
-<!--                                        <a class="flex-sm-fill text-sm-center nav-link" href="/cart">Cart</a>-->
-<!--                                        <a class="flex-sm-fill text-sm-center nav-link" href="/viewProducts">Products</a>-->
-<!--                                        <a class="flex-sm-fill text-sm-center nav-link" href="/viewCategories">Categories</a>-->
-<!--                                        <a class="flex-sm-fill text-sm-center nav-link" href="/adminRegister">Admin Register</a>-->
-<!--                                        <a class="flex-sm-fill text-sm-center nav-link disabled" href="/logout">Logout</a>-->
-<!--                                    </th:block>-->
-
-<!--                                    <th:block th:if="${session.user.getRole().getName() == 'USER'}">-->
-<!--                                        <a class="flex-sm-fill text-sm-center nav-link" href="/cart">Cart</a>-->
-<!--                                        <a class="flex-sm-fill text-sm-center nav-link" href="/viewProducts">Products</a>-->
-<!--                                        <a class="flex-sm-fill text-sm-center nav-link disabled" href="/logout">Logout</a>-->
-<!--                                    </th:block>-->
-
-
+        <th:block th:if="${session.role == 'ROLE_USER'}">
+            <a class="flex-sm-fill text-sm-center nav-link" href="/cart">Cart</a>
+            <a class="flex-sm-fill text-sm-center nav-link" href="/viewProducts">Products</a>
+            <a class="flex-sm-fill text-sm-center nav-link disabled" href="/logout">Logout</a>
         </th:block>
+    </th:block>
 
-        <!--        <a class="flex-sm-fill text-sm-center nav-link active" href="/login">Login</a>-->
-        <!--        <a class="flex-sm-fill text-sm-center nav-link" href="/register">Register</a>-->
-        <!--        <a class="flex-sm-fill text-sm-center nav-link" href="#">Link</a>-->
-        <!--        <a class="flex-sm-fill text-sm-center nav-link disabled" href="#">Logout</a>-->
-    </nav>
-
-    <!--    <div class="collapse navbar-collapse d-flex justify-content-end" id="navbarNav">-->
-    <!--        <ul class="navbar-nav row">-->
-
-    <!--            <th:block th:if="${session.user == null}">-->
-    <!--                <li class="nav-item col-md-4">-->
-    <!--                    <a class="nav-link text-white active h6" href="/login">Login</a>-->
-    <!--                </li>-->
-    <!--                <li class="nav-item col-md-4">-->
-    <!--                    <a class="nav-link text-white active h6" href="/register">Register</a>-->
-    <!--                </li>-->
-    <!--            </th:block>-->
-
-    <!--            <th:block th:unless="${session.user == null}">-->
-    <!--                <li class="col-md-4">-->
-    <!--                    <a class="nav-link text-white active h6" href="/cart">Add Item</a>-->
-    <!--                </li>-->
-    <!--                <li class="col-md-4">-->
-    <!--                    <a class="nav-link text-white active h6" href="/logout">Logout</a>-->
-    <!--                </li>-->
-    <!--            </th:block>-->
-
-    <!--        </ul>-->
-    <!--    </div>-->
-    </html>>
-</th:block>
-
+</nav>

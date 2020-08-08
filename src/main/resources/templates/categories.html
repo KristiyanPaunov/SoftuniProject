@@ -15,20 +15,21 @@
 
     <hr class="hr-3"/>
     <div class="container-fluid">
-        <ul class="offers row mx-auto d-flex flex-row justify-content-center">
-            <li th:each="category : ${categories}" th:object="${category}" th:text="*{getName()}">
-<!--                <form action="#" th:action="@{'/deleteCategory/{id}'(id=${category.getId()})}" th:method="GET">-->
-<!--                    <span class="close" ></span>-->
-                    <button type="submit">DELETE</button>
-<!--                </form>-->
+        <div id="categorylist">
+            <ul class = "list" >
+                <li  th:each="category : ${categories}" th:object="${category}" th:text="*{getName()}">
 
-            </li>
-        </ul>
-        <a href="/addCategory"><button>Add Category</button></a>
+                </li>
+            </ul>
+        </div>
+        <div id="buttondiv">
+            <a href="/addCategory"><button>Add Category</button></a>
+        </div>
 
     </div>
-
-
+   <!-- <form action="#" th:action="@{'/deleteCategory/{id}'(id=${category.getId()})}" th:method="GET">-->
+        <!--                    <span class="close" ></span>-->
+                <!--                </form>-->
 </main>
 <footer class="footer bg-dark  py-2">
     <th:block th:include="~{/fragments/footer}"></th:block>

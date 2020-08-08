@@ -1,5 +1,6 @@
 package com.example.website.config;
 
+import com.example.website.web.CustomAuthenticationSuccessHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,6 +18,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private UserDetailsService userDetailsService;
+
+    @Autowired
+    private CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -45,7 +49,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers( "/register").permitAll()
                 .antMatchers("/**/*.js", "/**/*.css", "/**/*.jpg").permitAll()
-                .antMatchers("/adminRegister").hasRole("ADMIN")
+                .antMatchers("/adminRegister","/viewCategories").hasRole("ADMIN")
                 .antMatchers("/login").permitAll()
                 .antMatchers("/index").permitAll()
                 .anyRequest()
@@ -53,8 +57,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .formLogin()
                 .loginPage("/login")
-                .loginProcessingUrl("/login")
                 .defaultSuccessUrl("/viewProducts", true)
+                .successHandler(customAuthenticationSuccessHandler)
                 .and()
                 .httpBasic()
                 .and()

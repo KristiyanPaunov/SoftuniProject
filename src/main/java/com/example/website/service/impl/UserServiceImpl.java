@@ -34,10 +34,10 @@ public class UserServiceImpl implements UserService {
         this.roleRepository = roleRepository;
     }
 
+
     private UserServiceModel register(UserServiceModel userServiceModel, Role role) {
         Cart cartToDb = new Cart();
         this.cartRepository.saveAndFlush(cartToDb);
-
 
         User user = this.modelMapper
                 .map(userServiceModel, User.class);

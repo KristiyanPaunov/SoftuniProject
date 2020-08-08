@@ -44,8 +44,6 @@ public class CartServiceImpl implements CartService {
         Product product = this.productRepository.findById(id).get();
 
 
-        //da probvam s harkodnato user id v controlera
-
         User user = this.userRepository.findById(userId).get();
         Long cartId = user.getCart().getId();
 
@@ -53,29 +51,29 @@ public class CartServiceImpl implements CartService {
 
         List<Product> productList = cart.getProducts();
 
-        if (!productList.contains(product)){
+        if (!productList.contains(product)) {
             productList.add(product);
         }
 
-       return modelMapper.map(this.cartRepository.saveAndFlush(cart), CartServiceModel.class);
+        return modelMapper.map(this.cartRepository.saveAndFlush(cart), CartServiceModel.class);
 
     }
 
     @Override
     @Transactional
     public void removeProductFromCart(Long id, Long userId) {
-
         Product product = this.productRepository.findById(id).get();
-
         User user = this.userRepository.findById(userId).get();
 
         Cart cart = user.getCart();
-
         List<Product> products = cart.getProducts();
 
+        System.out.println();
 
-        if (products.contains(product)){
-           cart.getProducts().remove(product);
+        if (products.contains(product)) {
+            cart.getProducts().remove(product);
+            user.setCart(cart);
+            this.userRepository.saveAndFlush(user);
         }
 
 
@@ -91,8 +89,8 @@ public class CartServiceImpl implements CartService {
 
         List<Product> productList = cart.getProducts();
 
-        if (!productList.isEmpty()){
-           productList.clear();
+        if (!productList.isEmpty()) {
+            productList.clear();
         }
 
     }
@@ -110,10 +108,10 @@ public class CartServiceImpl implements CartService {
         List<Product> productList = cart.getProducts();
 
         for (int i = 0; i < productList.size(); i++) {
-             total = total.add(productList.get(i).getPrice());
+            total = total.add(productList.get(i).getPrice());
         }
 
-        if (!productList.isEmpty()){
+        if (!productList.isEmpty()) {
             productList.clear();
         }
 
@@ -131,7 +129,7 @@ public class CartServiceImpl implements CartService {
 
         List<ProductServiceModel> productList = new ArrayList<>();
 
-        for (Product product:cart.getProducts()) {
+        for (Product product : cart.getProducts()) {
             ProductServiceModel productServiceModel = new ProductServiceModel();
             productServiceModel.setId(product.getId());
             productServiceModel.setDescription(product.getDescription());

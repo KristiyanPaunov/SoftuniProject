@@ -1,8 +1,9 @@
 package com.example.website.web;
 
-import com.example.website.exception.WrongCategoryException;
 import com.example.website.model.binding.UserLoginBindingModel;
 import com.example.website.model.binding.UserRegisterBindingModel;
+import com.example.website.model.entity.User;
+import com.example.website.model.repository.UserRepository;
 import com.example.website.model.service.UserServiceModel;
 import com.example.website.service.UserService;
 import org.modelmapper.ModelMapper;
@@ -17,6 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import java.util.Optional;
 
 
 @Controller
@@ -28,6 +30,8 @@ public class UsersController {
     private ModelMapper modelMapper;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private UserRepository userRepository;
 
 
     @GetMapping("/login")
@@ -39,40 +43,6 @@ public class UsersController {
         return "login";
     }
 
-
-    @PostMapping("/login")
-    public String loginUser(@Valid @ModelAttribute("userLoginBindingModel")
-                                    UserLoginBindingModel userLoginBindingModel,
-                            BindingResult bindingResult,
-                            RedirectAttributes redirectAttributes,
-                            HttpSession httpSession, Model model) throws WrongCategoryException {
-
-
-        if (bindingResult.hasErrors()) {
-            redirectAttributes.addFlashAttribute("userLoginBindingModel", userLoginBindingModel);
-            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.userLoginBindingModel", bindingResult);
-
-            return "redirect:login";
-        }
-
-        UserServiceModel user = this.userService.findByUsername(userLoginBindingModel.getUsername());
-
-
-        if (user == null || !passwordEncoder.matches(userLoginBindingModel.getPassword(), user.getPassword())) {
-            redirectAttributes.addFlashAttribute("userLoginBindingModel", userLoginBindingModel);
-            redirectAttributes.addFlashAttribute("notFound", true);
-
-            return "redirect:login";
-        }
-
-        httpSession.setAttribute("user", user);
-
-
-
-
-        return "redirect:viewProducts";
-
-    }
 
     @GetMapping("/register")
     public String register(Model model) {
@@ -88,8 +58,13 @@ public class UsersController {
                                    UserRegisterBindingModel userRegisterBindingModel,
                            BindingResult bindingResult, RedirectAttributes redirectAttributes) {
 
-        if (bindingResult.hasErrors() || !userRegisterBindingModel.getPassword().equals(userRegisterBindingModel.getConfirmPassword())) {
+        User user = modelMapper.map(userRegisterBindingModel,User.class);
 
+
+
+        if (bindingResult.hasErrors() || !userRegisterBindingModel.getPassword().equals(userRegisterBindingModel.getConfirmPassword())
+        || user  != null) {
+            
             redirectAttributes.addFlashAttribute("userRegisterBindingModel", userRegisterBindingModel);
             redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.userRegisterBindingModel", bindingResult);
 
@@ -116,7 +91,7 @@ public class UsersController {
                                 BindingResult bindingResult, RedirectAttributes redirectAttributes) {
 
         if (userRegisterBindingModel.getRole() != null) {
-            return "redirect:admin-register";
+            return "redirect:adminRegister";
         }
 
         if (bindingResult.hasErrors() || !userRegisterBindingModel.getPassword().equals(userRegisterBindingModel.getConfirmPassword())) {

@@ -11,6 +11,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,10 +33,6 @@ public class ProductServiceImpl implements ProductService {
         Product product = this.modelMapper
                 .map(productServiceModel, Product.class);
 
-        // Get category by ID instead of by name
-
-//        product.setCategory(this.categoryRepository
-//        .findByName(productServiceModel.getCategory().getName()).get());
 
         product.setCategory(this.categoryRepository
                 .findById(productServiceModel.getCategory().getId()).get());
@@ -47,35 +44,34 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<ProductServiceModel> findAllItems() {
 
-        return this.productRepository
+        List<ProductServiceModel> productServiceModelList = this.productRepository
                 .findAll()
                 .stream()
                 .map(item -> {
-
-//                    ItemViewModel itemViewModel = this.modelMapper.map(item, ItemViewModel.class);
-//
-//                    itemViewModel.setImageUrl(String.format("/img/%s-%s.jpg",
-//                            item.getGender(), item.getCategory().getCategoryName().name()));
 
                     ProductServiceModel productServiceModel = this.modelMapper.map(item, ProductServiceModel.class);
 
                     if (!item.isDeleted()) {
                         return productServiceModel;
                     }
-
                     return null;
                 }).collect(Collectors.toList());
+
+        List<ProductServiceModel> productServiceModelListReturn = new ArrayList<>();
+
+        productServiceModelList.forEach(productServiceModel -> {
+            if (productServiceModel != null){
+                productServiceModelListReturn.add(productServiceModel);
+            }
+        });
+
+        return productServiceModelListReturn;
     }
 
     @Override
     public ProductServiceModel findById(Long id) {
         return this.productRepository.findById(id)
                 .map(item -> {
-
-//                    ItemViewModel itemViewModel = this.modelMapper.map(item, ItemViewModel.class);
-//
-//                    itemViewModel.setImageUrl(String.format("/img/%s-%s.jpg",
-//                            item.getGender(), item.getCategory().getCategoryName().name()));
 
                     ProductServiceModel productServiceModel = this.modelMapper
                             .map(item, ProductServiceModel.class);

@@ -51,8 +51,6 @@ public class CartController {
         model.addObject("cartModel", cartService.getAllProducts(userServiceModel.getCart().getId()));
         model.setViewName("cart");
 
-        System.out.println();
-
 
         return model;
     }
@@ -70,7 +68,7 @@ public class CartController {
 
         //return product
 
-        return "redirect:products-view";
+        return "redirect:/viewProducts";
 
     }
 
